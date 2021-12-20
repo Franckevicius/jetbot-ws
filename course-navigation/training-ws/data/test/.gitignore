@@ -1,0 +1,4 @@
+#ignoring pictures
+*
+*/
+!.gitignore
