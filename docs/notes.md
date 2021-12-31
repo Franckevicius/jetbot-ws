@@ -1,3 +1,6 @@
+## x11vnc headless resolution setup with xrandr
+`xrandr --fb 1920x1080 -display :0`
+
 ## Pipeline
 1. Train with TF2(`model_main_tf2.py`)/PyTorch() on machine/cloud
 2. Export to saved model TF2(`exporter_main_v2.py`)/Pytorch()
@@ -24,9 +27,6 @@ $ sudo init 3 # Network and multitasking, no GUI
 $ sudo init 5 # Network, multitasking and GUI
 ```
 
-## Jetson Stats
-[jetson stats docs](https://pypi.org/project/jetson-stats/)
-
 ## ONNX 
 [ONNX to TF2 mappings](https://github.com/onnx/tensorflow-onnx/blob/master/support_status.md)
 
@@ -51,15 +51,9 @@ Check TensorRT 8.0 (JetBot version) operator support
      ```
 
 ## Upgrading to Jetpack 4.6
-- Add `stats.py` to run on startup and display stats on OLED display. Alternatively, use `jtop` API with `stats.py` to route CPU/GPU util, battery percentage to OLED display.
+- Try use `jtop` API with `stats.py` to route CPU/GPU util, battery percentage to OLED display.
 
-    Currently `stats.py ` since `torch` is paired with `CUDA 10.0`, we have `CUDA 10.2.3` 
     Disabled `/usr/local/lib/python3.6/dist-packages/jetbot-0.4.0-py3.6.egg/jetbot/__init__.py` import `from .object_detection import ObjectDetector`
-
-    `jetbot_stats.service` daemon fails on after a few seconds.
-
-- Jupyter Lab try launch with `0.0.0.0`, otherwise find start for localhost
-
 
 [Script for OPENCV CUDA compilation](https://github.com/AastaNV/JEP/blob/master/script/install_opencv4.5.0_Jetson.sh)  - upgraded to OPENCV-4.5.0
 
@@ -93,3 +87,10 @@ $ jetson_release
 
 [jetson_stats](https://github.com/rbonghi/jetson_stats)
 
+[Jetson Zoo](https://elinux.org/Jetson_Zoo)
+
+[TAO Toolkit](https://docs.nvidia.com/tao/tao-toolkit/index.html)
+
+[GStreamer](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/accelerated_gstreamer.html#)
+
+[NVBuffer manager](https://docs.nvidia.com/jetson/l4t-multimedia/group__ee__nvbuffering__group.html)
