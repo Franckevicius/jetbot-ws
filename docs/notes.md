@@ -1,12 +1,34 @@
 ## x11vnc headless resolution setup with xrandr
 `xrandr --fb 1920x1080 -display :0`
 
-## Pipeline
-1. Train with TF2(`model_main_tf2.py`)/PyTorch() on machine/cloud
-2. Export to saved model TF2(`exporter_main_v2.py`)/Pytorch()
-3. Convert to ONNX with `tf2onnx`/`torchonnx`
-4. Load ONNX into TensorRT 
+## Connecting bluetooth device 
+```sh
+sudo echo 1 > /sys/module/bluetooth/parameters/disable_ertm # Default is N
+bluetoothctl
+scan on
+pair MAC_ADDR 
+connect MAC_ADDR
+```
+
+## TF2 pipeline without detectnet
+1. Train with TF2(`model_main_tf2.py`)
+2. Export to saved model TF2(`exporter_main_v2.py`)
+3. Convert to ONNX with `tf2onnx`
+4. Load ONNX into TensorRT
 5. Deploy on JetBot
+
+## Training 
+```sh
+cd jetson-inference/python/training/detection/ssd/
+python3 train_ssd.py --dataset-type=voc --data=data/data-12-31 --epochs=100
+python3 onnx_export.py --model-dir=./models/ --labels=./models/labels.txt 
+```
+
+## Inference
+```sh
+cd ~/jetbot/jetbot-ws/course-navigation/training-ws
+detectnet --model=onnx-exported-models/ssd1-can.onnx --labels=onnx-exported-models/can-labels.txt --input-blob=input_0 --output-cvg=scores --output-bbox=boxes csi://0
+```
 
 ## Traitlet links, controller observe
 Must `unlink()`/`unobserve()` after establish `link()`/`observe()` relationship. Observe binds to function object which does not get overwritten - use `unobserve_all()`.

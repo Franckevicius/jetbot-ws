@@ -4,22 +4,22 @@ from robot import Robot
 
 robot = Robot()
 
-net = jetson.inference.detectNet(argv=["--model=../training-ws/onnx-exported-models/ssd-mobilenet.onnx", 
-                                       "--labels=../training-ws/metadata/labels.txt",
+net = jetson.inference.detectNet(argv=["--model=../training-ws/onnx-exported-models/ssd1-can.onnx", 
+                                       "--labels=../training-ws/onnx-exported-models/can-labels.txt",
                                        '--input-blob=input_0',
                                        '--output-cvg=scores',
                                        '--output-bbox=boxes'],
-                                 threshold=0.4)
+                                 threshold=0.6)
 camera = jetson.utils.videoSource("csi://0")      # '/dev/video0' for V4L2
 display = jetson.utils.videoOutput("display://0") # 'my_video.mp4' for file
 
 def rotate():
-    robot.left_motor.value = 0.1
+    robot.left_motor.value = 0.15
     robot.right_motor.value = 0
 
 def go():
-    robot.left_motor.value = 0.1
-    robot.right_motor.value = 0.1
+    robot.left_motor.value = 0.3
+    robot.right_motor.value = 0.3
 
 def stop():
     robot.left_motor.value = 0.0
@@ -32,7 +32,7 @@ while display.IsStreaming():
     img = camera.Capture()
     detections = net.Detect(img)    
     closest_objects = sorted(detections, key = lambda o : o.Area, reverse=True)
-    if len(closest_objects) != 0:
+    if len(closest_objects) != 0 and closest_objects[0].Height < 720*0.9:
         go()
     else:
         rotate()
